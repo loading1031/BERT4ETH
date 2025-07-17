@@ -14,7 +14,7 @@ flags.DEFINE_bool("phisher", False, "whether to include phisher detection datase
 flags.DEFINE_bool("deanon", False, "whether to include de-anonymization dataset.")
 flags.DEFINE_bool("mev", False, "whether to include mev-bot dataset.")
 flags.DEFINE_bool("tornado", False, "whether to include tornado dataset.")
-flags.DEFINE_string("data_dir", "/home/sihao/BERT4ETH/Data", "data directory.")
+flags.DEFINE_string("data_dir", "../Data", "data directory.")
 flags.DEFINE_string("dataset", None , "which dataset to use")
 flags.DEFINE_string("bizdate", None, "the date of running experiments.")
 flags.DEFINE_bool("dup", False, "whether to do transaction duplication")
@@ -311,8 +311,8 @@ def main():
 
     if FLAGS.tornado:
         print("Add tornado...")
-        tornado_in = open(os.path.join(FLAGS.data_dir, "tornado_trans_in_removed.csv", "r"))
-        tornado_out = open(os.path.join(FLAGS.data_dir, "tornado_trans_out_removed.csv", "r"))
+        tornado_in = open(os.path.join(FLAGS.data_dir, "tornado_trans_in_removed.csv"), "r")
+        tornado_out = open(os.path.join(FLAGS.data_dir, "tornado_trans_out_removed.csv"), "r")
         tornado_eoa2seq_in, tornado_eoa2seq_out = load_data(tornado_in, tornado_out)
 
         if FLAGS.dup:

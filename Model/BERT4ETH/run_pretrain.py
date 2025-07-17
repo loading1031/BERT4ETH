@@ -60,7 +60,8 @@ flags.DEFINE_string(
 flags.DEFINE_string("signature", 'default', "signature_name")
 
 ## Other parameters
-flags.DEFINE_string("init_checkpoint", None, "Initial checkpoint (usually from a pre-trained BERT model).")
+# flags.DEFINE_string("init_checkpoint", None, "Initial checkpoint (usually from a pre-trained BERT model).")
+flags.DEFINE_string("init_checkpoint", "bert4eth_1M_min3_dup_seq100_mask80_shared_zipfan5000/model_64000", "Initial checkpoint")
 flags.DEFINE_integer("max_seq_length", 100, "")
 flags.DEFINE_float("masked_lm_prob", 0.8, "Masked LM probability.")
 # flags.DEFINE_integer("max_predictions_per_seq", 40, "")

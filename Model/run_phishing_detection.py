@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use("Agg")
+
 import pickle as pkl
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -17,7 +20,7 @@ tf.disable_v2_behavior()
 flags = tf.flags
 FLAGS = flags.FLAGS
 
-flags.DEFINE_bool("visual", False, "whether to do visualization or not")
+flags.DEFINE_bool("visual", True, "whether to do visualization or not")
 flags.DEFINE_string("algo", None, "algorithm for embedding generation" )
 flags.DEFINE_string("model_index", None, "model index")
 
@@ -33,8 +36,8 @@ def load_embedding():
         address_for_embedding = np.load("trans2vec/data/tran2vec_20_10_0.5_1_20221010_address.npy")
 
     elif FLAGS.algo == "bert4eth":
-        embeddings = np.load("BERT4ETH/data/bert_embedding_" + FLAGS.model_index + ".npy")
-        address_for_embedding = np.load("BERT4ETH/data/address_for_embed_" + FLAGS.model_index + ".npy")
+        embeddings = np.load("BERT4ETH/data/embedding_" + FLAGS.model_index + ".npy")
+        address_for_embedding = np.load("BERT4ETH/data/address_" + FLAGS.model_index + ".npy")
 
     elif FLAGS.algo == "diff2vec":
         embeddings = np.load("diff2vec/data/diff2vec_10_20_20220925_embedding.npy")
@@ -98,6 +101,10 @@ def main():
             y.append(1)
         else:
             y.append(0)
+    
+    y = np.array(y)
+    print(f"✅ 정상 계정 수 (label=0): {(y == 0).sum():,}")
+    print(f"🛑 피싱 계정 수 (label=1): {(y == 1).sum():,}")
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
@@ -132,7 +139,7 @@ def main():
     plt.plot(fpr, tpr)
     plt.show()
 
-    for threshold in [0.1, 0.15, 0.2]:
+    for threshold in [0.1, 0.15, 0.2, 0.25, 0.3]:
         print("threshold =", threshold)
         y_pred = np.zeros_like(y_test_proba)
         y_pred[np.where(np.array(y_test_proba) >= threshold)[0]] = 1
@@ -157,10 +164,12 @@ def main():
         plt.figure(figsize=(8, 6), dpi=80)
         plt.scatter(x=X_tsne[:10000, 0], y=X_tsne[:10000, 1], marker=".")
         plt.scatter(x=X_tsne[10000:, 0], y=X_tsne[10000:, 1], marker=".", color="orange")
+        plt.savefig("tsne_phisher_vs_normal.png")
         plt.show()
 
         plt.figure(figsize=(8, 6), dpi=80)
         plt.scatter(x=X_tsne[:10000, 0], y=X_tsne[:10000, 1], marker=".")
+        plt.savefig("tsne_normal_only.png")
         plt.show()
 
 
